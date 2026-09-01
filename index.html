@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VITALA — AI-Powered Health &amp; Disaster Resilience Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+  </script>
+</head>
+<body class="vitala-app">
+
+  <!-- Topbar Navigation -->
+  <header class="topbar">
+    <a class="brand" href="#home">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+          <path d="M3.22 12H9.5l1.5-3 2 6.5 1.5-3.5h6.28" stroke="#00ff88" stroke-width="1.8"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-title">VITALA</span>
+        <span class="brand-sub">Health · Intelligence. Disaster Resilience.</span>
+      </div>
+    </a>
+
+    <nav class="nav-links">
+      <a href="#home" class="active">
+        <span>HOME</span>
+        <span class="active-indicator"><i class="dot"></i><i class="bar"></i></span>
+      </a>
+      <a href="#vision"><span>VISION</span></a>
+      <a href="#technology"><span>TECHNOLOGY</span></a>
+      <a href="#architecture"><span>ARCHITECTURE</span></a>
+      <a href="#dashboard"><span>DASHBOARD</span></a>
+      <a href="#disaster"><span>MODES</span></a>
+      <a href="#team"><span>TEAM</span></a>
+      <a href="#contact"><span>CONTACT</span></a>
+    </nav>
+
+    <a class="explore-btn" href="#technology">
+      <span>EXPLORE SYSTEM</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+    </a>
+  </header>
+
+  <main>
+    <!-- HERO 3D CINEMATIC EXPERIENCE (Pinned 400vh Scroll Storytelling) -->
+    <section class="hero-3d-experience" id="home">
+      <!-- Background Ambient Cosmic Lighting -->
+      <div class="bg-stars"></div>
+      <div class="bg-glow left"></div>
+      <div class="bg-glow center"></div>
+
+      <!-- Sticky 3D WebGL Canvas Container -->
+      <div class="canvas-container" id="canvasContainer">
+        <canvas id="scene"></canvas>
+
+        <!-- 5 Floating Curved Telemetry Node Annotations -->
+        <div class="telemetry-node node-physio" id="nodePhysio">
+          <div class="node-badge red">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M8 12h2l1-2 2 4 1-2h2" stroke="#fff" stroke-width="1.8"/></svg>
+          </div>
+          <div class="node-content">
+            <strong>PHYSIOLOGICAL</strong>
+            <span>Heart Rate • SpO₂ • Temp</span>
+          </div>
+        </div>
+
+        <div class="telemetry-node node-env" id="nodeEnv">
+          <div class="node-badge cyan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+          </div>
+          <div class="node-content">
+            <strong>ENVIRONMENT</strong>
+            <span>Temp • Humidity<br>Air Quality MQ-135</span>
+          </div>
+        </div>
+
+        <div class="telemetry-node node-motion" id="nodeMotion">
+          <div class="node-badge green">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 4a2 2 0 1 0-4 0 2 2 0 0 0 4 0z"/><path d="M7 21l3-4-1.5-4.5L12 9l3.5 2.5 2-1.5"/><path d="M10 17l4 4 3-3"/></svg>
+          </div>
+          <div class="node-content">
+            <strong>MOTION</strong>
+            <span>Activity • Fall Impact<br>6-Axis Posture</span>
+          </div>
+        </div>
+
+        <div class="telemetry-node node-loc" id="nodeLoc">
+          <div class="node-badge purple">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-8-7.5-8-12a8 8 0 1 1 16 0c0 4.5-8 12-8 12z"/><circle cx="12" cy="9" r="3"/></svg>
+          </div>
+          <div class="node-content">
+            <strong>LOCATION</strong>
+            <span>GPS • Altitude<br>Satellite Time</span>
+          </div>
+        </div>
+
+        <div class="telemetry-node node-ai" id="nodeAi">
+          <div class="node-badge gold">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3m6-3v3M9 20v3m6-3v3M20 9h3m-3 6h3M1 9h3m-3 6h3"/></svg>
+          </div>
+          <div class="node-content">
+            <strong>EDGE AI</strong>
+            <span>On-Device TinyML<br>Risk Synthesis</span>
+          </div>
+        </div>
+
+        <!-- 3D Phase Dynamic Progress HUD -->
+        <div class="phase-hud" id="phaseHud">
+          <div class="phase-hud-pill">
+            <span class="phase-hud-dot"></span>
+            <span class="phase-hud-num" id="phaseNum">PHASE 01</span>
+            <span class="phase-hud-divider">/</span>
+            <strong class="phase-hud-title" id="phaseTitle">SENSE</strong>
+          </div>
+          <div class="phase-hud-bar">
+            <div class="phase-hud-fill" id="phaseFill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll Storytelling Overlay Panels -->
+      <div class="story-scroll-track">
+        <!-- Story Phase 01: Hero Intro & Sense -->
+        <div class="story-phase phase-01 active" id="phase1">
+          <div class="hero-intro-box">
+            <div class="project-tag">SIH26181 · HEALTH / BIOTECH / MEDTECH</div>
+            
+            <h1 class="hero-title">
+              <span class="hero-word">AI-POWERED</span><br>
+              <span class="hl-green hero-word">HEALTH</span> &amp; <span class="hl-blue hero-word">DISASTER</span><br>
+              <span class="hero-word">RESILIENCE</span> <span class="hero-word">COMPANION</span>
+            </h1>
+            <div class="title-underline"></div>
+
+            <p class="hero-desc">
+              An intelligent companion that continuously reads physiological and environmental signals, interprets risk at the edge, and helps people stay safer when conditions become uncertain.
+            </p>
+
+            <div class="feature-pills">
+              <div class="pill-card">
+                <div class="pill-icon green">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04Z"/></svg>
+                </div>
+                <div class="pill-info">
+                  <strong>EDGE AI</strong>
+                  <span>On-Device Intelligence</span>
+                </div>
+              </div>
+
+              <div class="pill-card">
+                <div class="pill-icon cyan">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                </div>
+                <div class="pill-info">
+                  <strong>PRIVACY FIRST</strong>
+                  <span>Local Processing</span>
+                </div>
+              </div>
+
+              <div class="pill-card">
+                <div class="pill-icon teal">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+                </div>
+                <div class="pill-info">
+                  <strong>OFFLINE RESILIENT</strong>
+                  <span>Works Without Internet</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero-actions">
+              <a href="#monitor" class="cta-primary">
+                <span>EXPLORE THE SYSTEM</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+              </a>
+
+              <button class="cta-secondary" id="watchOverviewBtn">
+                <div class="play-circle">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 9-14 9V3z"/></svg>
+                </div>
+                <div class="play-text">
+                  <b>WATCH OVERVIEW</b>
+                  <small>See how it works</small>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story Phase 02: Interpret & Disassembly -->
+        <div class="story-phase phase-02" id="phase2">
+          <div class="story-card">
+            <span class="story-phase-tag">02 — INTERPRET</span>
+            <h2>FUSE SIGNALS<br><span class="hl-cyan">AT THE EDGE.</span></h2>
+            <p>As the outer titanium housing articulates open, raw multi-sensor telemetry flows into digital Kalman filters, eliminating environmental noise and calculating real-time composite vitals.</p>
+            <div class="metric-mini-row">
+              <span><b>HR / SpO₂</b> OPTICAL PPG</span>
+              <span><b>HEAT INDEX</b> DHT22</span>
+              <span><b>AIR QUALITY</b> MQ-135</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story Phase 03: Understand & TinyML -->
+        <div class="story-phase phase-03" id="phase3">
+          <div class="story-card">
+            <span class="story-phase-tag">03 — UNDERSTAND</span>
+            <h2>TURN SIGNALS<br><span class="hl-gold">INTO CONTEXT.</span></h2>
+            <p>A heart rate of 110 BPM means something entirely different in a cool room than during heatwave exposure or after an unexpected fall. TinyML neural classifiers correlate vitals with environmental stress.</p>
+            <div class="pipeline-capsule">
+              <span>RAW SIGNALS</span> → <span>FEATURES</span> → <span>TINYML EDGE AI</span> → <strong>RISK SCORE</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story Phase 04: Protect & Autonomy -->
+        <div class="story-phase phase-04" id="phase4">
+          <div class="story-card">
+            <span class="story-phase-tag">04 — PROTECT</span>
+            <h2>LOCAL ACTION.<br><span class="hl-red">ZERO CLOUD LAG.</span></h2>
+            <p>Immediate 4-stage risk classification triggers localized protective responses in under 20ms: audible distress pulses, acoustic alarms, and emergency beacon broadcasts.</p>
+            <div class="risk-pill-row">
+              <span class="r-pill safe">SAFE</span>
+              <span class="r-pill caution">CAUTION</span>
+              <span class="r-pill high">HIGH</span>
+              <span class="r-pill emergency">EMERGENCY</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story Phase 05: Resilience & LoRa -->
+        <div class="story-phase phase-05" id="phase5">
+          <div class="story-card">
+            <span class="story-phase-tag">05 — RESILIENCE</span>
+            <h2>SAFETY LOOP<br><span class="hl-green">WITHOUT INTERNET.</span></h2>
+            <p>When cell towers collapse and power grids go dark during disasters, VITALA's long-range LoRa mesh radio transmits rescue coordinates and vitals directly to search teams.</p>
+            <div class="mesh-flow">
+              <span>DEVICE</span> <i>⇢</i> <span>LORA MESH</span> <i>⇢</i> <span>OFF-GRID RESCUE GATEWAY</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Stats & Radar Bar -->
+      <div class="hero-bottom-bar">
+        <div class="stats-group">
+          <div class="stat-box" data-count="7">
+            <div class="stat-val"><span class="counter-num">7</span>+</div>
+            <div class="stat-label">SENSORS</div>
+            <div class="stat-sub">Integrated Array</div>
+          </div>
+          <div class="stat-box" data-count="5">
+            <div class="stat-val"><span class="counter-num">5</span></div>
+            <div class="stat-label">RISK MODES</div>
+            <div class="stat-sub">Heat, Gas, Fall &amp; More</div>
+          </div>
+          <div class="stat-box" data-count="3">
+            <div class="stat-val"><span class="counter-num">3</span></div>
+            <div class="stat-label">CONNECTIVITY</div>
+            <div class="stat-sub">WiFi • GSM • LoRa</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val green">24/7</div>
+            <div class="stat-label">MONITORING</div>
+            <div class="stat-sub">Always Protecting</div>
+          </div>
+        </div>
+
+        <div class="risk-center-banner">
+          <div class="risk-sub-pulse">
+            <svg width="24" height="12" viewBox="0 0 40 16" fill="none" stroke="#00ff88" stroke-width="2"><path d="M0 8h10l3-6 4 12 4-8 3 4h16"/></svg>
+            <span>RISK ASSESSMENT</span>
+            <svg width="24" height="12" viewBox="0 0 40 16" fill="none" stroke="#00ff88" stroke-width="2"><path d="M0 8h10l3-6 4 12 4-8 3 4h16"/></svg>
+          </div>
+          <div class="risk-slogan">
+            <span class="c-blue">ANALYZE.</span> <span class="c-gold">PREDICT.</span> <span class="c-green">PROTECT.</span>
+          </div>
+        </div>
+
+        <div class="risk-radar-card">
+          <div class="radar-legend">
+            <div class="legend-title">RISK LEVEL</div>
+            <div class="legend-items">
+              <div class="legend-item"><span class="dot safe"></span> SAFE</div>
+              <div class="legend-item"><span class="dot caution"></span> CAUTION</div>
+              <div class="legend-item"><span class="dot high"></span> HIGH</div>
+              <div class="legend-item"><span class="dot emergency"></span> EMERGENCY</div>
+            </div>
+          </div>
+          <div class="radar-display">
+            <canvas id="radarCanvas" width="96" height="96"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll Hint -->
+      <div class="scroll-explore">
+        <div class="mouse-icon"><span class="wheel"></span></div>
+        <span>SCROLL TO EXPLORE STORY</span>
+      </div>
+    </section>
+
+    <!-- SECTION 02: VISION & CONTEXT -->
+    <section class="content-section" id="vision">
+      <div class="section-container">
+        <div class="section-tag">02 — VISION</div>
+        <div class="two-col-grid">
+          <div class="col-title">
+            <h2>NOT JUST<br>A <span class="hl-gold">NUMBER.</span></h2>
+          </div>
+          <div class="col-desc">
+            <p>Traditional wearables show isolated numbers: a heart rate spike, an ambient temperature reading, or a step count. In high-risk environments, isolated numbers mislead.</p>
+            <p><strong>VITALA</strong> creates multi-modal context: combining cardiovascular exertion with ambient thermal load, toxic particulate inhalation, and biometric posture to forecast crisis before it occurs.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 03: TECHNOLOGY (SENSOR MATRIX & FUSION) -->
+    <section class="content-section tech-section" id="technology">
+      <div class="section-container">
+        <div class="section-tag">03 — SENSOR MATRIX &amp; FUSION</div>
+        <h2 class="section-heading">PRECISION SENSING<br>AT THE <span class="hl-green">EDGE.</span></h2>
+        
+        <!-- Interactive Sensor Fusion Hub & Signal Bus -->
+        <div class="fusion-visualizer-container" id="fusionVisualizer">
+          <div class="fusion-telemetry-bar">
+            <span class="fusion-status-dot"></span>
+            <span class="fusion-status-label">LIVE SENSOR STREAM</span>
+            <span class="fusion-sep">•</span>
+            <span class="fusion-channel-tag">5 MULTI-MODAL CHANNELS</span>
+            <span class="fusion-sep">•</span>
+            <span class="fusion-active-tag">EDGE FUSION ACTIVE</span>
+          </div>
+
+          <div class="fusion-diagram">
+            <!-- 5 Left Input Nodes -->
+            <div class="fusion-inputs">
+              <div class="fusion-node node-ppg" data-sensor="0">
+                <span class="fnode-badge ppg">01 PPG</span>
+                <span class="fnode-name">MAX30102</span>
+              </div>
+              <div class="fusion-node node-climate" data-sensor="1">
+                <span class="fnode-badge climate">02 CLIMATE</span>
+                <span class="fnode-name">DHT22</span>
+              </div>
+              <div class="fusion-node node-gas" data-sensor="2">
+                <span class="fnode-badge gas">03 AIR QUAL</span>
+                <span class="fnode-name">MQ-135</span>
+              </div>
+              <div class="fusion-node node-imu" data-sensor="3">
+                <span class="fnode-badge imu">04 6-AXIS IMU</span>
+                <span class="fnode-name">MPU-6050</span>
+              </div>
+              <div class="fusion-node node-radio" data-sensor="4">
+                <span class="fnode-badge telemetry">05 RADIO/GPS</span>
+                <span class="fnode-name">SX1262 LoRa</span>
+              </div>
+            </div>
+
+            <!-- SVG Animated Laser Pathways -->
+            <div class="fusion-svg-wrap">
+              <svg class="fusion-svg" viewBox="0 0 400 240" preserveAspectRatio="none">
+                <!-- 5 Laser Pathways -->
+                <path class="fpath ppg" id="path0" d="M 0,24 C 180,24 240,120 400,120"/>
+                <path class="fpath climate" id="path1" d="M 0,72 C 180,72 260,120 400,120"/>
+                <path class="fpath gas" id="path2" d="M 0,120 L 400,120"/>
+                <path class="fpath imu" id="path3" d="M 0,168 C 180,168 260,120 400,120"/>
+                <path class="fpath radio" id="path4" d="M 0,216 C 180,216 240,120 400,120"/>
+
+                <!-- Animated Photon Packets -->
+                <circle class="fphoton photon-ppg" r="4.5"><animateMotion dur="2.4s" repeatCount="indefinite" path="M 0,24 C 180,24 240,120 400,120"/></circle>
+                <circle class="fphoton photon-climate" r="4.5"><animateMotion dur="2.8s" begin="0.4s" repeatCount="indefinite" path="M 0,72 C 180,72 260,120 400,120"/></circle>
+                <circle class="fphoton photon-gas" r="4.5"><animateMotion dur="2.2s" begin="0.8s" repeatCount="indefinite" path="M 0,120 L 400,120"/></circle>
+                <circle class="fphoton photon-imu" r="4.5"><animateMotion dur="2.6s" begin="0.3s" repeatCount="indefinite" path="M 0,168 C 180,168 260,120 400,120"/></circle>
+                <circle class="fphoton photon-radio" r="4.5"><animateMotion dur="3.0s" begin="0.6s" repeatCount="indefinite" path="M 0,216 C 180,216 240,120 400,120"/></circle>
+              </svg>
+            </div>
+
+            <!-- Central Fusion Node -->
+            <div class="fusion-center-hub" id="fusionHub">
+              <div class="fhub-outer-ring"></div>
+              <div class="fhub-spinning-ring"></div>
+              <div class="fhub-core">
+                <div class="fhub-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3m6-3v3M9 20v3m6-3v3M20 9h3m-3 6h3M1 9h3m-3 6h3"/></svg>
+                </div>
+                <strong>SENSOR FUSION</strong>
+                <span class="fhub-sub">TinyML Edge Engine</span>
+                <span class="fhub-rate">500 Hz Sync</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sensor-cards-grid">
+          <div class="sensor-card" data-idx="0">
+            <div class="card-top">
+              <span class="card-num">01</span>
+              <span class="badge-type ppg">OPTICAL PPG</span>
+            </div>
+            <h3>MAX30102</h3>
+            <p>Biometric sensor measuring real-time Heart Rate (HR), Pulse Wave Velocity, and Blood Oxygen Saturation (SpO₂).</p>
+          </div>
+
+          <div class="sensor-card" data-idx="1">
+            <div class="card-top">
+              <span class="card-num">02</span>
+              <span class="badge-type climate">CLIMATE</span>
+            </div>
+            <h3>DHT22</h3>
+            <p>Precision thermistor and capacitive humidity sensor for calculating Heat Index and thermal distress thresholds.</p>
+          </div>
+
+          <div class="sensor-card" data-idx="2">
+            <div class="card-top">
+              <span class="card-num">03</span>
+              <span class="badge-type gas">AIR QUALITY</span>
+            </div>
+            <h3>MQ-135</h3>
+            <p>Electrochemical gas sensing array monitoring hazardous air, smoke, carbon monoxide, and volatile organic pollutants.</p>
+          </div>
+
+          <div class="sensor-card" data-idx="3">
+            <div class="card-top">
+              <span class="card-num">04</span>
+              <span class="badge-type imu">6-AXIS IMU</span>
+            </div>
+            <h3>MPU-6050</h3>
+            <p>Tri-axial gyroscope and accelerometer running edge algorithms for impact fall detection, posture tracking, and seismic shock.</p>
+          </div>
+
+          <div class="sensor-card" data-idx="4">
+            <div class="card-top">
+              <span class="card-num">05</span>
+              <span class="badge-type telemetry">OFF-GRID RADIO</span>
+            </div>
+            <h3>SX1262 LoRa + GPS</h3>
+            <p>Long-range satellite positioning and off-grid radio mesh ensuring emergency coordinates reach rescuers without cellular towers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 04: ARCHITECTURE PIPELINE -->
+    <section class="content-section" id="architecture">
+      <div class="section-container">
+        <div class="section-tag">04 — EDGE INTELLIGENCE ARCHITECTURE</div>
+        <div class="two-col-grid">
+          <div class="col-title">
+            <h2>FROM RAW SENSORS<br>TO <span class="hl-blue">LOCAL ACTION.</span></h2>
+          </div>
+          <div class="col-desc">
+            <p>VITALA performs on-device digital filtering, feature extraction, and TinyML inference locally at the hardware level. The safety loop executes in under 20ms without relying on cloud availability.</p>
+          </div>
+        </div>
+
+        <div class="pipeline-flow">
+          <div class="pipe-step" data-step="0">
+            <div class="pipe-header">
+              <div class="pipe-num">01</div>
+              <div class="pipe-status-dots"><span class="pdot"></span><span class="pdot"></span><span class="pdot"></span></div>
+            </div>
+            <b>SENSE</b>
+            <span>Multi-channel sensor acquisition</span>
+            <div class="pipe-glow-line"></div>
+          </div>
+          <div class="pipe-arrow-track" data-arrow="0">
+            <span class="pipe-arrow-packet"></span>
+            <span class="pipe-arrow-char">→</span>
+          </div>
+          <div class="pipe-step" data-step="1">
+            <div class="pipe-header">
+              <div class="pipe-num">02</div>
+              <div class="pipe-status-dots"><span class="pdot"></span><span class="pdot"></span><span class="pdot"></span></div>
+            </div>
+            <b>FILTER</b>
+            <span>Kalman noise reduction &amp; validation</span>
+            <div class="pipe-glow-line"></div>
+          </div>
+          <div class="pipe-arrow-track" data-arrow="1">
+            <span class="pipe-arrow-packet"></span>
+            <span class="pipe-arrow-char">→</span>
+          </div>
+          <div class="pipe-step" data-step="2">
+            <div class="pipe-header">
+              <div class="pipe-num">03</div>
+              <div class="pipe-status-dots"><span class="pdot"></span><span class="pdot"></span><span class="pdot"></span></div>
+            </div>
+            <b>INTERPRET</b>
+            <span>TinyML Edge risk classification</span>
+            <div class="pipe-glow-line"></div>
+          </div>
+          <div class="pipe-arrow-track" data-arrow="2">
+            <span class="pipe-arrow-packet"></span>
+            <span class="pipe-arrow-char">→</span>
+          </div>
+          <div class="pipe-step" data-step="3">
+            <div class="pipe-header">
+              <div class="pipe-num">04</div>
+              <div class="pipe-status-dots"><span class="pdot"></span><span class="pdot"></span><span class="pdot"></span></div>
+            </div>
+            <b>PROTECT</b>
+            <span>LoRa broadcast &amp; acoustic alarm</span>
+            <div class="pipe-glow-line"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 05: LIVE STATE MONITOR -->
+    <section class="content-section" id="dashboard">
+      <div class="section-container">
+        <div class="section-tag">05 — LIVE SYSTEM MONITOR</div>
+        <div class="dash-board-widget" id="dashBoardWidget">
+          <div class="dash-header">
+            <div class="dash-title">
+              <span class="live-dot"></span>
+              <b>VITALA / EDGE RESILIENCE MONITOR</b>
+            </div>
+            <div class="dash-status">
+              <span class="dash-pulse-badge">● LIVE</span>
+              <span>STATE: ON-DEVICE INFERENCE ACTIVE</span>
+            </div>
+          </div>
+
+          <!-- Subtle Telemetry ECG Signal Line -->
+          <div class="dash-signal-bar">
+            <svg class="dash-signal-svg" viewBox="0 0 800 24" preserveAspectRatio="none">
+              <path class="dash-signal-track" d="M 0,12 L 200,12 L 210,4 L 220,20 L 230,2 L 240,18 L 250,12 L 500,12 L 510,4 L 520,20 L 530,2 L 540,18 L 550,12 L 800,12"/>
+              <path class="dash-signal-wave" d="M 0,12 L 200,12 L 210,4 L 220,20 L 230,2 L 240,18 L 250,12 L 500,12 L 510,4 L 520,20 L 530,2 L 540,18 L 550,12 L 800,12"/>
+            </svg>
+            <span class="dash-signal-packet"></span>
+          </div>
+
+          <div class="dash-metrics-row">
+            <div class="metric-card" data-metric="0">
+              <div class="m-card-header">
+                <span class="m-label">HEART RATE</span>
+                <span class="m-pulse-dot red"></span>
+              </div>
+              <strong class="m-val" id="dashBpm">74 <small>BPM</small></strong>
+              <span class="m-sub">Resting Sinus Rhythm</span>
+            </div>
+            <div class="metric-card" data-metric="1">
+              <div class="m-card-header">
+                <span class="m-label">SpO₂ LEVEL</span>
+                <span class="m-pulse-dot cyan"></span>
+              </div>
+              <strong class="m-val hl-cyan" id="dashSpo2">98 <small>%</small></strong>
+              <span class="m-sub">Optimal Saturation</span>
+            </div>
+            <div class="metric-card" data-metric="2">
+              <div class="m-card-header">
+                <span class="m-label">HEAT RISK</span>
+                <span class="m-pulse-dot gold"></span>
+              </div>
+              <strong class="m-val hl-gold" id="dashHeat">LOW <small>(24°C)</small></strong>
+              <span class="m-sub">Thermal Balance Normal</span>
+            </div>
+            <div class="metric-card card-protected" data-metric="3">
+              <div class="m-card-header">
+                <span class="m-label">OVERALL STATUS</span>
+                <span class="m-pulse-dot green"></span>
+              </div>
+              <strong class="m-val hl-green" id="dashProtected">PROTECTED</strong>
+              <span class="m-sub">All Edge Nodes Online</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 06: DISASTER MODES -->
+    <section class="content-section disaster-section" id="disaster">
+      <!-- Ambient Tactical HUD Background Layer -->
+      <div class="disaster-bg-grid"></div>
+      <div class="disaster-spotlight" id="disasterSpotlight"></div>
+
+      <div class="section-container">
+        <div class="section-tag">06 — DISASTER RESPONSE MODES</div>
+        
+        <div class="disaster-title-row">
+          <h2 class="section-heading disaster-heading">
+            <span class="dheading-line line1">BUILT FOR</span><br>
+            <span class="dheading-line line2">THE <span class="hl-red">WORST CASE.</span></span>
+          </h2>
+          
+          <!-- Live Threat Telemetry Badge -->
+          <div class="disaster-telemetry-hud" id="disasterHud">
+            <div class="dhud-status">
+              <span class="dhud-pulse-dot" id="dhudDot"></span>
+              <strong id="dhudState">RESPONSE ACTIVE</strong>
+            </div>
+            <div class="dhud-sub">
+              <span class="dhud-mode" id="dhudModeName">MODE 01 · HEATWAVE DISTRESS</span>
+              <span class="dhud-sep">|</span>
+              <span class="dhud-latency">&lt;20ms ON-DEVICE LOOP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Central Response Engine Connecting HUD -->
+        <div class="disaster-engine-bus" id="disasterEngineBus">
+          <div class="dengine-hub" id="dengineHub">
+            <div class="dhub-ring"></div>
+            <div class="dhub-core">
+              <span class="dhub-label">RESPONSE ENGINE</span>
+              <span class="dhub-tech">Edge Trigger Matrix</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="disaster-cards-grid">
+          <!-- CARD 01: HEATWAVE DISTRESS -->
+          <div class="disaster-card mode-heatwave" data-mode="0">
+            <div class="dcard-corner tl"></div>
+            <div class="dcard-corner tr"></div>
+            <div class="dcard-corner bl"></div>
+            <div class="dcard-corner br"></div>
+            <div class="dcard-scanline"></div>
+            
+            <div class="card-top">
+              <span class="badge-type ppg">MODE 01</span>
+              <span class="dcard-status-pill">MONITORING</span>
+            </div>
+            <h3>HEATWAVE DISTRESS</h3>
+            <p>Monitors core temperature vs ambient heat index. Forecasts heat exhaustion before cognitive degradation sets in.</p>
+            
+            <div class="dcard-telemetry">
+              <div class="dtelemetry-track"><div class="dtelemetry-bar heat"></div></div>
+              <div class="dtelemetry-info">
+                <span>CORE TEMP vs AMBIENT</span>
+                <strong class="dval-heat">38.4°C · DISTRESS RISKING</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 02: SMOKE & GAS INHALATION -->
+          <div class="disaster-card mode-gas" data-mode="1">
+            <div class="dcard-corner tl"></div>
+            <div class="dcard-corner tr"></div>
+            <div class="dcard-corner bl"></div>
+            <div class="dcard-corner br"></div>
+            <div class="dcard-scanline"></div>
+
+            <div class="card-top">
+              <span class="badge-type gas">MODE 02</span>
+              <span class="dcard-status-pill">MONITORING</span>
+            </div>
+            <h3>SMOKE &amp; GAS INHALATION</h3>
+            <p>Triggers immediate air hazard alarms when carbon monoxide, smoke, or toxic VOC levels spike alongside drops in SpO₂.</p>
+            
+            <div class="dcard-telemetry">
+              <div class="dtelemetry-track"><div class="dtelemetry-bar gas"></div></div>
+              <div class="dtelemetry-info">
+                <span>MQ-135 + SpO₂ FUSION</span>
+                <strong class="dval-gas">AQI SPIKE · HAZARD TRIGGER</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 03: FALL & IMPACT TRAP -->
+          <div class="disaster-card mode-impact" data-mode="2">
+            <div class="dcard-corner tl"></div>
+            <div class="dcard-corner tr"></div>
+            <div class="dcard-corner bl"></div>
+            <div class="dcard-corner br"></div>
+            <div class="dcard-scanline"></div>
+            <div class="dcard-shockwave"></div>
+
+            <div class="card-top">
+              <span class="badge-type imu">MODE 03</span>
+              <span class="dcard-status-pill">MONITORING</span>
+            </div>
+            <h3>FALL &amp; IMPACT TRAP</h3>
+            <p>Detects high-G acceleration spikes followed by zero movement, automatically broadcasting GPS coordinates over off-grid LoRa.</p>
+            
+            <div class="dcard-telemetry">
+              <div class="dtelemetry-track"><div class="dtelemetry-bar impact"></div></div>
+              <div class="dtelemetry-info">
+                <span>6-AXIS IMU + LORA GPS</span>
+                <strong class="dval-impact">4.8G IMPACT · BEACON ARMED</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 07: PROJECT & INNOVATION -->
+    <section class="content-section" id="team">
+      <div class="section-container">
+        <div class="section-tag">07 — PROJECT &amp; INNOVATION</div>
+        <div class="two-col-grid">
+          <div class="col-title">
+            <h2>ENGINEERED FOR<br>REAL-WORLD <span class="hl-green">RESILIENCE.</span></h2>
+          </div>
+          <div class="col-desc">
+            <p><strong>SIH26181 · HEALTH / BIOTECH / MEDTECH</strong></p>
+            <p>VITALA was engineered as an open, accessible early-warning companion prototype to bridge the gap between vital biometrics and extreme environment disaster survival.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMPORTANT NOTICE / ADVISORY -->
+    <section class="content-section advisory-section" id="contact">
+      <div class="section-container">
+        <div class="notice-card">
+          <div class="notice-header">
+            <span class="notice-dot"></span>
+            <strong class="notice-title">IMPORTANT NOTICE</strong>
+            <span class="notice-tag">MEDICAL &amp; SAFETY ADVISORY</span>
+          </div>
+          <p class="notice-text">The system is designed as an early-warning and personal safety companion prototype, not a replacement for professional medical diagnosis or emergency medical services.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Premium Product Footer -->
+  <footer class="footer" id="mainFooter">
+    <div class="footer-top-line"></div>
+    <div class="footer-container">
+      <div class="footer-col footer-brand-col">
+        <div class="fbrand-header">
+          <div class="fbrand-dot"></div>
+          <b class="fbrand-title">VITALA</b>
+          <span class="fbrand-ver">v2.4 PROTOTYPE</span>
+        </div>
+        <p class="fbrand-tagline">Sense Early. Predict Risk. Respond Faster.</p>
+        <span class="fbrand-sub">SIH26181 • Healthcare &amp; Disaster Resilience Companion</span>
+      </div>
+
+      <div class="footer-col footer-specs-col">
+        <span class="fcol-heading">SYSTEM ARCHITECTURE</span>
+        <ul class="fspecs-list">
+          <li><span class="fspec-k">EDGE INFERENCE:</span> <span class="fspec-v">&lt; 20ms TinyML Loop</span></li>
+          <li><span class="fspec-k">SENSOR BUS:</span> <span class="fspec-v">5 Multi-Modal Streams</span></li>
+          <li><span class="fspec-k">MESH COMM:</span> <span class="fspec-v">Off-Grid SX1262 LoRa</span></li>
+          <li><span class="fspec-k">FUSION RATE:</span> <span class="fspec-v">500 Hz Hardware Sync</span></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-status-col">
+        <span class="fcol-heading">SYSTEM STATUS</span>
+        <div class="fstatus-badge">
+          <span class="fstatus-dot"></span>
+          <span>ALL EDGE NODES NOMINAL</span>
+        </div>
+        <span class="fcopy-text">© 2026 VITALA Project. Open Technical Prototype.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Three.js + GSAP + ScrollTrigger (Verified CDNJS) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

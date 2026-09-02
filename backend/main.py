@@ -1,10 +1,11 @@
 import sys
 import os
+from pathlib import Path
 
 # Ensure backend directory is in sys.path
-current_dir = os.path.dirname(os.path.abspath(__file__))
-if current_dir not in sys.path:
-    sys.path.insert(0, current_dir)
+current_dir = Path(__file__).resolve().parent
+if str(current_dir) not in sys.path:
+    sys.path.insert(0, str(current_dir))
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -41,4 +42,6 @@ app.include_router(predict.router)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.getenv("PORT", str(settings.PORT)))
+    host = os.getenv("HOST", settings.HOST)
+    uvicorn.run("main:app", host=host, port=port, reload=False)

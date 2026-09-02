@@ -1,5 +1,10 @@
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 .env
+.pytest_cache/
+.coverage
+htmlcov/
 .DS_Store
 Thumbs.db

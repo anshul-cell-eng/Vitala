@@ -920,9 +920,18 @@
       }
     }
 
+    // Dynamic Environment URL Detection (Local / Custom Backend / Vercel deployment)
+    function getBackendWsUrl() {
+      if (window.VITALA_WS_URL) return window.VITALA_WS_URL;
+      const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || !window.location.hostname;
+      if (isLocal) return "ws://localhost:8000/ws/dashboard";
+      const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+      return `${proto}//${window.location.host}/ws/dashboard`;
+    }
+
     // Connect to WebSocket with graceful reconnect & fallback
     function connectTelemetryWebSocket() {
-      const wsUrl = `ws://${window.location.hostname || "localhost"}:8000/ws/dashboard`;
+      const wsUrl = getBackendWsUrl();
       try {
         ws = new WebSocket(wsUrl);
 

@@ -826,9 +826,15 @@
 
     // Dynamic Environment URL Detection (Local / Custom Backend / Vercel deployment)
     function getApiBaseUrl() {
-      if (window.VITALA_API_URL) return window.VITALA_API_URL.replace(/\/+$/, "");
+      // 1. Check window globals (VITE_API_URL or VITALA_API_URL)
+      const envUrl = window.VITE_API_URL || window.VITALA_API_URL || (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_URL);
+      if (envUrl && typeof envUrl === "string") {
+        return envUrl.replace(/\/+$/, "");
+      }
+      // 2. Local development fallback
       const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || !window.location.hostname;
       if (isLocal) return "http://localhost:8000";
+      // 3. Same-origin fallback
       return window.location.origin;
     }
 

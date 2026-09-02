@@ -526,12 +526,13 @@
         <div class="dash-board-widget" id="dashBoardWidget">
           <div class="dash-header">
             <div class="dash-title">
-              <span class="live-dot"></span>
+              <span class="live-dot" id="dashLiveDot"></span>
               <b>VITALA / EDGE RESILIENCE MONITOR</b>
+              <span class="dash-node-badge" id="dashNodeBadge">ESP32-NODE-04 · LIVE TELEMETRY</span>
             </div>
             <div class="dash-status">
-              <span class="dash-pulse-badge">● LIVE</span>
-              <span>STATE: ON-DEVICE INFERENCE ACTIVE</span>
+              <span class="dash-pulse-badge" id="dashStreamBadge">● WEBSOCKET READY</span>
+              <span id="dashStatusText">STATE: ON-DEVICE INFERENCE ACTIVE</span>
             </div>
           </div>
 
@@ -544,38 +545,67 @@
             <span class="dash-signal-packet"></span>
           </div>
 
+          <!-- Primary Multi-Modal Telemetry Grid -->
           <div class="dash-metrics-row">
             <div class="metric-card" data-metric="0">
               <div class="m-card-header">
-                <span class="m-label">HEART RATE</span>
+                <span class="m-label">HEART RATE (MAX30102)</span>
                 <span class="m-pulse-dot red"></span>
               </div>
               <strong class="m-val" id="dashBpm">74 <small>BPM</small></strong>
-              <span class="m-sub">Resting Sinus Rhythm</span>
+              <span class="m-sub" id="dashBpmSub">Resting Sinus Rhythm</span>
             </div>
             <div class="metric-card" data-metric="1">
               <div class="m-card-header">
-                <span class="m-label">SpO₂ LEVEL</span>
+                <span class="m-label">SpO₂ LEVEL (MAX30102)</span>
                 <span class="m-pulse-dot cyan"></span>
               </div>
               <strong class="m-val hl-cyan" id="dashSpo2">98 <small>%</small></strong>
-              <span class="m-sub">Optimal Saturation</span>
+              <span class="m-sub" id="dashSpo2Sub">Optimal Saturation</span>
             </div>
             <div class="metric-card" data-metric="2">
               <div class="m-card-header">
-                <span class="m-label">HEAT RISK</span>
+                <span class="m-label">HEAT STRAIN INDEX (HSI)</span>
                 <span class="m-pulse-dot gold"></span>
               </div>
-              <strong class="m-val hl-gold" id="dashHeat">LOW <small>(24°C)</small></strong>
-              <span class="m-sub">Thermal Balance Normal</span>
+              <strong class="m-val hl-gold" id="dashHsi">28.4 <small>HSI</small></strong>
+              <span class="m-sub" id="dashHsiSub">DHT22: 24.5°C · 48% RH</span>
             </div>
-            <div class="metric-card card-protected" data-metric="3">
+            <div class="metric-card" data-metric="3">
+              <div class="m-card-header">
+                <span class="m-label">AIR QUALITY (MQ-135)</span>
+                <span class="m-pulse-dot green"></span>
+              </div>
+              <strong class="m-val hl-green" id="dashGas">42 <small>PPM</small></strong>
+              <span class="m-sub" id="dashGasSub">Status: OPTIMAL</span>
+            </div>
+          </div>
+
+          <!-- Secondary Tactical Kinematics & GPS Row -->
+          <div class="dash-metrics-row secondary-row">
+            <div class="metric-card" data-metric="4">
+              <div class="m-card-header">
+                <span class="m-label">6-AXIS MOTION (MPU-6050)</span>
+                <span class="m-pulse-dot cyan"></span>
+              </div>
+              <strong class="m-val" id="dashMotion">9.81 <small>m/s²</small></strong>
+              <span class="m-sub" id="dashMotionSub">Status: STABLE · 1.0G Rest</span>
+            </div>
+            <div class="metric-card" data-metric="5">
+              <div class="m-card-header">
+                <span class="m-label">GPS BEACON (NEO-6M)</span>
+                <span class="m-pulse-dot gold"></span>
+              </div>
+              <strong class="m-val hl-gold" id="dashGps">28.6139°, 77.2090°</strong>
+              <span class="m-sub" id="dashGpsSub">Alt: 216m · 8 Sats · FIX</span>
+            </div>
+            <div class="metric-card card-protected" data-metric="6">
               <div class="m-card-header">
                 <span class="m-label">OVERALL STATUS</span>
                 <span class="m-pulse-dot green"></span>
               </div>
               <strong class="m-val hl-green" id="dashProtected">PROTECTED</strong>
-              <span class="m-sub">All Edge Nodes Online</span>
+              <span class="m-sub" id="dashProtectedSub">Edge TinyML Loop &lt;20ms</span>
             </div>
           </div>
         </div>

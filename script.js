@@ -821,13 +821,32 @@
     let isHardwareLive = false;
     let ws = null;
     let wsReconnectTimer = null;
+    let wsBackoffMs = 1500;
+    let currentHardwareBpm = 74;
+
+    // Dynamic Environment URL Detection (Local / Custom Backend / Vercel deployment)
+    function getApiBaseUrl() {
+      if (window.VITALA_API_URL) return window.VITALA_API_URL.replace(/\/+$/, "");
+      const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || !window.location.hostname;
+      if (isLocal) return "http://localhost:8000";
+      return window.location.origin;
+    }
+
+    function getBackendWsUrl() {
+      if (window.VITALA_WS_URL) return window.VITALA_WS_URL;
+      const apiBase = getApiBaseUrl();
+      const wsProto = apiBase.startsWith("https") ? "wss:" : "ws:";
+      const hostPath = apiBase.replace(/^https?:\/\//, "");
+      return `${wsProto}//${hostPath}/ws/dashboard`;
+    }
 
     function applyTelemetryToUI(data) {
       if (!data) return;
 
       // Heart Rate (MAX30102)
       if (dashBpm && data.heartRate !== undefined && data.heartRate > 0) {
-        dashBpm.innerHTML = `${Math.round(data.heartRate)} <small>BPM</small>`;
+        currentHardwareBpm = Math.round(data.heartRate);
+        dashBpm.innerHTML = `${currentHardwareBpm} <small>BPM</small>`;
         if (dashBpmSub) {
           dashBpmSub.textContent = data.vitalsValid !== false ? "Resting Sinus Rhythm" : "Sensor Reading Stabilizing";
         }
@@ -920,16 +939,23 @@
       }
     }
 
-    // Dynamic Environment URL Detection (Local / Custom Backend / Vercel deployment)
-    function getBackendWsUrl() {
-      if (window.VITALA_WS_URL) return window.VITALA_WS_URL;
-      const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || !window.location.hostname;
-      if (isLocal) return "ws://localhost:8000/ws/dashboard";
-      const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
-      return `${proto}//${window.location.host}/ws/dashboard`;
+    // Initial Hydration from REST (/api/nodes)
+    async function hydrateInitialNodeState() {
+      try {
+        const resp = await fetch(`${getApiBaseUrl()}/api/nodes`, { cache: "no-store" });
+        if (resp.ok) {
+          const json = await resp.json();
+          if (json.active_nodes && json.active_nodes["ESP32-NODE-04"]) {
+            applyTelemetryToUI(json.active_nodes["ESP32-NODE-04"]);
+          }
+        }
+      } catch (e) {
+        // Silent fallback to simulation
+      }
     }
+    hydrateInitialNodeState();
 
-    // Connect to WebSocket with graceful reconnect & fallback
+    // Connect to WebSocket with exponential backoff & auto-reconnect
     function connectTelemetryWebSocket() {
       const wsUrl = getBackendWsUrl();
       try {
@@ -937,6 +963,7 @@
 
         ws.onopen = () => {
           isHardwareLive = true;
+          wsBackoffMs = 1500;
           if (dashLiveDot) dashLiveDot.style.background = "var(--green)";
           if (dashNodeBadge) dashNodeBadge.classList.remove("offline");
           if (dashStreamBadge) {
@@ -950,7 +977,7 @@
             const payload = JSON.parse(event.data);
             applyTelemetryToUI(payload);
           } catch (err) {
-            console.warn("Invalid telemetry frame:", err);
+            // Ignore malformed packet
           }
         };
 
@@ -969,14 +996,44 @@
             dashStreamBadge.style.color = "var(--gold)";
           }
           clearTimeout(wsReconnectTimer);
-          wsReconnectTimer = setTimeout(connectTelemetryWebSocket, 5000);
+          wsReconnectTimer = setTimeout(connectTelemetryWebSocket, wsBackoffMs);
+          wsBackoffMs = Math.min(wsBackoffMs * 1.5, 8000);
         };
       } catch (e) {
         isHardwareLive = false;
+        clearTimeout(wsReconnectTimer);
+        wsReconnectTimer = setTimeout(connectTelemetryWebSocket, 5000);
       }
     }
 
     connectTelemetryWebSocket();
+
+    // Expose programmatic helper API for developer testing & verification
+    window.VITALA_API = {
+      getBaseUrl: getApiBaseUrl,
+      getWsUrl: getBackendWsUrl,
+      checkHealth: async () => {
+        const r = await fetch(`${getApiBaseUrl()}/health`);
+        return await r.json();
+      },
+      getStatus: async () => {
+        const r = await fetch(`${getApiBaseUrl()}/api/status`);
+        return await r.json();
+      },
+      getNodes: async () => {
+        const r = await fetch(`${getApiBaseUrl()}/api/nodes`);
+        return await r.json();
+      },
+      predictRisk: async (params = {}) => {
+        const r = await fetch(`${getApiBaseUrl()}/api/v1/predict`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(params)
+        });
+        return await r.json();
+      },
+      reconnectWs: connectTelemetryWebSocket
+    };
 
     // Autonomous Simulation Loop (active when hardware backend is offline)
     let simStep = 0;

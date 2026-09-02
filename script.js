@@ -419,6 +419,9 @@
     vitalaCore.add(lineMesh);
   });
 
+  // Explicitly trigger initial resize and positioning now that vitalaCore is fully built
+  resize();
+
   // ==========================================
   // 5. LIVE 60 FPS HTML5 RADAR SCANNER
   // ==========================================
@@ -516,6 +519,22 @@
     if (typeof ScrollTrigger.clearScrollMemory === "function") {
       ScrollTrigger.clearScrollMemory();
     }
+
+    // ==========================================
+    // HERO ENTRANCE CINEMATIC REVEAL (PAGE LOAD)
+    // ==========================================
+    const heroIntroTL = gsap.timeline({ defaults: { ease: "power3.out" } });
+    heroIntroTL
+      .from(".topbar", { y: -25, opacity: 0, duration: 0.6 })
+      .from(".project-tag", { y: 15, opacity: 0, duration: 0.45 }, "-=0.3")
+      .from(".hero-word", { y: 30, opacity: 0, stagger: 0.07, duration: 0.65 }, "-=0.25")
+      .from(".title-underline", { scaleX: 0, transformOrigin: "left center", duration: 0.5 }, "-=0.3")
+      .from(".hero-desc", { y: 16, opacity: 0, duration: 0.55 }, "-=0.3")
+      .from(".feature-pills .pill-card", { y: 18, opacity: 0, scale: 0.96, stagger: 0.08, duration: 0.5 }, "-=0.3")
+      .from(".hero-actions", { y: 16, opacity: 0, duration: 0.5 }, "-=0.3")
+      .from(".telemetry-node", { scale: 0.75, opacity: 0, stagger: 0.1, duration: 0.65, ease: "back.out(1.4)" }, "-=0.4")
+      .from("#phaseHud", { x: -20, opacity: 0, duration: 0.55 }, "-=0.35")
+      .from(".hero-bottom-bar", { y: 25, opacity: 0, duration: 0.6 }, "-=0.4");
 
     const masterTL = gsap.timeline({
       scrollTrigger: {
@@ -827,7 +846,10 @@
     // Dynamic Environment URL Detection (Local / Custom Backend / Vercel deployment)
     function getApiBaseUrl() {
       // 1. Check window globals (VITE_API_URL or VITALA_API_URL)
-      const envUrl = window.VITE_API_URL || window.VITALA_API_URL || (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_URL);
+      const envUrl =
+        window.VITE_API_URL ||
+        window.VITALA_API_URL ||
+        (window.__ENV__ && window.__ENV__.VITE_API_URL);
       if (envUrl && typeof envUrl === "string") {
         return envUrl.replace(/\/+$/, "");
       }

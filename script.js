@@ -57,6 +57,23 @@
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h, false);
+
+    const aspect = w / h;
+    if (typeof vitalaCore !== "undefined" && vitalaCore) {
+      if (aspect < 1.0) {
+        // Mobile Portrait: center 3D core in background
+        vitalaCore.position.set(0.0, 0.15, 0);
+        vitalaCore.scale.set(0.65, 0.65, 0.65);
+      } else if (aspect < 1.4) {
+        // Laptop / Small Desktop (e.g. 1366x768, 1440x900)
+        vitalaCore.position.set(1.35, 0.05, 0);
+        vitalaCore.scale.set(0.76, 0.76, 0.76);
+      } else {
+        // Widescreen Desktop (e.g. 1920x1080)
+        vitalaCore.position.set(1.45, 0.05, 0);
+        vitalaCore.scale.set(0.80, 0.80, 0.80);
+      }
+    }
   }
   resize();
   window.addEventListener("resize", resize);
@@ -164,7 +181,8 @@
   // 4. VITALA INTELLIGENCE CORE (MODULAR 3D OBJECT)
   // ==========================================
   const vitalaCore = new THREE.Group();
-  vitalaCore.position.set(0.65, 0.1, 0); // Positioned elegantly in center-right
+  vitalaCore.position.set(1.4, 0.05, 0); // Positioned elegantly in right-center 40-45% zone
+  vitalaCore.scale.set(0.8, 0.8, 0.8);
   world.add(vitalaCore);
 
   // ------------------------------------------

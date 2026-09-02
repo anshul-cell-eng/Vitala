@@ -317,11 +317,11 @@ body {
 }
 
 /* Position of the 5 Nodes around the 3D Core (Original Orbital Composition) */
-.node-physio { top: 18%; left: clamp(56%, 63%, 68%); }
-.node-env    { top: 28%; left: clamp(44%, 47%, 50%); }
-.node-motion { top: 28%; left: clamp(74%, 81%, 84%); }
-.node-loc    { top: 62%; left: clamp(46%, 49%, 52%); }
-.node-ai     { top: 62%; left: clamp(74%, 81%, 84%); }
+.node-physio { top: 14%; left: clamp(62%, 69%, 76%); }
+.node-env    { top: 26%; left: clamp(48%, 51%, 55%); }
+.node-motion { top: 26%; left: clamp(82%, 86%, 90%); }
+.node-loc    { top: 64%; left: clamp(48%, 51%, 55%); }
+.node-ai     { top: 64%; left: clamp(82%, 86%, 90%); }
 
 /* PHASE DYNAMIC HUD (Bottom Left - Clear of Hero CTA) */
 .phase-hud {
@@ -2272,12 +2272,12 @@ body {
 
 /* RESPONSIVE DESIGN & VIEWPORT SAFETY */
 @media (max-width: 1200px) {
-  .hero-intro-box { max-width: 520px; }
-  .node-physio { top: 16%; left: 58%; }
-  .node-env    { top: 26%; left: 42%; }
-  .node-motion { top: 26%; left: 76%; }
-  .node-loc    { top: 64%; left: 44%; }
-  .node-ai     { top: 64%; left: 76%; }
+  .hero-intro-box { max-width: 500px; }
+  .node-physio { top: 14%; left: 66%; }
+  .node-env    { top: 26%; left: 46%; }
+  .node-motion { top: 26%; left: 82%; }
+  .node-loc    { top: 64%; left: 46%; }
+  .node-ai     { top: 64%; left: 82%; }
 }
 
 @media (max-width: 1024px) {

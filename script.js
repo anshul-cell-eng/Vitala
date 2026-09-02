@@ -36,6 +36,7 @@
   // 1. SCENE, CAMERA & RENDERER SETUP
   // ==========================================
   const scene = new THREE.Scene();
+  let vitalaCore = null;
 
   const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
   camera.position.set(0, 0.2, 7.2);
@@ -59,7 +60,7 @@
     renderer.setSize(w, h, false);
 
     const aspect = w / h;
-    if (typeof vitalaCore !== "undefined" && vitalaCore) {
+    if (vitalaCore) {
       if (aspect < 1.0) {
         // Mobile Portrait: center 3D core in background
         vitalaCore.position.set(0.0, 0.15, 0);
@@ -180,7 +181,7 @@
   // ==========================================
   // 4. VITALA INTELLIGENCE CORE (MODULAR 3D OBJECT)
   // ==========================================
-  const vitalaCore = new THREE.Group();
+  vitalaCore = new THREE.Group();
   vitalaCore.position.set(1.4, 0.05, 0); // Positioned elegantly in right-center 40-45% zone
   vitalaCore.scale.set(0.8, 0.8, 0.8);
   world.add(vitalaCore);
@@ -1369,7 +1370,19 @@
     drawRadar();
 
     renderer.render(scene, camera);
+    if (window.__VITALA_DEBUG__) window.__VITALA_DEBUG__.frameCounter++;
   }
+
+  // Debug Hook for automated browser diagnostics
+  window.__VITALA_DEBUG__ = {
+    scene,
+    camera,
+    renderer,
+    vitalaCore,
+    world,
+    frameCounter: 0
+  };
+
   animate();
 
   // Watch Overview Interaction

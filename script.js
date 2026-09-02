@@ -856,8 +856,8 @@
       // 2. Local development fallback
       const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || !window.location.hostname;
       if (isLocal) return "http://localhost:8000";
-      // 3. Same-origin fallback
-      return window.location.origin;
+      // 3. Production backend fallback (Render API)
+      return "https://vitala-api.onrender.com";
     }
 
     function getBackendWsUrl() {

@@ -890,20 +890,57 @@
     function applyTelemetryToUI(data) {
       if (!data) return;
 
+      let isCritical = false;
+      let isWarning = false;
+
       // Heart Rate (MAX30102)
       if (dashBpm && data.heartRate !== undefined && data.heartRate > 0) {
         currentHardwareBpm = Math.round(data.heartRate);
         dashBpm.innerHTML = `${currentHardwareBpm} <small>BPM</small>`;
-        if (dashBpmSub) {
-          dashBpmSub.textContent = data.vitalsValid !== false ? "Resting Sinus Rhythm" : "Sensor Reading Stabilizing";
+        const bpmCard = dashBpm.closest(".metric-card");
+
+        if (currentHardwareBpm > 120) {
+          isCritical = true;
+          dashBpm.className = "m-val hl-red";
+          if (dashBpmSub) dashBpmSub.textContent = `CRITICAL: Tachycardia Spike (${currentHardwareBpm} BPM)`;
+          if (bpmCard) { bpmCard.classList.add("card-alert-pulse"); bpmCard.classList.remove("card-warning-pulse"); }
+        } else if (currentHardwareBpm > 100) {
+          isWarning = true;
+          dashBpm.className = "m-val hl-gold";
+          if (dashBpmSub) dashBpmSub.textContent = `WARNING: Elevated Cardiac Load (${currentHardwareBpm} BPM)`;
+          if (bpmCard) { bpmCard.classList.add("card-warning-pulse"); bpmCard.classList.remove("card-alert-pulse"); }
+        } else if (currentHardwareBpm < 50) {
+          isWarning = true;
+          dashBpm.className = "m-val hl-gold";
+          if (dashBpmSub) dashBpmSub.textContent = `WARNING: Bradycardia Detected (${currentHardwareBpm} BPM)`;
+          if (bpmCard) { bpmCard.classList.add("card-warning-pulse"); bpmCard.classList.remove("card-alert-pulse"); }
+        } else {
+          dashBpm.className = "m-val";
+          if (dashBpmSub) dashBpmSub.textContent = data.vitalsValid !== false ? "Resting Sinus Rhythm" : "Sensor Reading Stabilizing";
+          if (bpmCard) bpmCard.classList.remove("card-alert-pulse", "card-warning-pulse");
         }
       }
 
       // SpO2 (MAX30102)
       if (dashSpo2 && data.spO2 !== undefined && data.spO2 > 0) {
-        dashSpo2.innerHTML = `${Math.round(data.spO2)} <small>%</small>`;
-        if (dashSpo2Sub) {
-          dashSpo2Sub.textContent = data.spO2 >= 95 ? "Optimal Saturation" : "Caution: Sub-95% Saturation";
+        const spo2Val = Math.round(data.spO2);
+        dashSpo2.innerHTML = `${spo2Val} <small>%</small>`;
+        const spo2Card = dashSpo2.closest(".metric-card");
+
+        if (spo2Val < 90) {
+          isCritical = true;
+          dashSpo2.className = "m-val hl-red";
+          if (dashSpo2Sub) dashSpo2Sub.textContent = `CRITICAL: Severe Hypoxia (<90%)`;
+          if (spo2Card) { spo2Card.classList.add("card-alert-pulse"); spo2Card.classList.remove("card-warning-pulse"); }
+        } else if (spo2Val < 95) {
+          isWarning = true;
+          dashSpo2.className = "m-val hl-gold";
+          if (dashSpo2Sub) dashSpo2Sub.textContent = "Caution: Sub-95% Saturation";
+          if (spo2Card) { spo2Card.classList.add("card-warning-pulse"); spo2Card.classList.remove("card-alert-pulse"); }
+        } else {
+          dashSpo2.className = "m-val hl-cyan";
+          if (dashSpo2Sub) dashSpo2Sub.textContent = "Optimal Saturation";
+          if (spo2Card) spo2Card.classList.remove("card-alert-pulse", "card-warning-pulse");
         }
       }
 
@@ -911,6 +948,21 @@
       if (dashHsi && data.hsiScore !== undefined) {
         const hsi = Number(data.hsiScore).toFixed(1);
         dashHsi.innerHTML = `${hsi} <small>HSI</small>`;
+        const hsiCard = dashHsi.closest(".metric-card");
+
+        if (Number(hsi) > 40.0) {
+          isCritical = true;
+          dashHsi.className = "m-val hl-red";
+          if (hsiCard) { hsiCard.classList.add("card-alert-pulse"); hsiCard.classList.remove("card-warning-pulse"); }
+        } else if (Number(hsi) > 32.0) {
+          isWarning = true;
+          dashHsi.className = "m-val hl-gold";
+          if (hsiCard) { hsiCard.classList.add("card-warning-pulse"); hsiCard.classList.remove("card-alert-pulse"); }
+        } else {
+          dashHsi.className = "m-val hl-gold";
+          if (hsiCard) hsiCard.classList.remove("card-alert-pulse", "card-warning-pulse");
+        }
+
         if (dashHsiSub) {
           const temp = data.ambientTemp !== undefined ? Number(data.ambientTemp).toFixed(1) : "24.5";
           const hum = data.humidity !== undefined ? Number(data.humidity).toFixed(0) : "48";
@@ -923,33 +975,54 @@
         const ppm = Math.round(data.aqiPpm);
         dashGas.innerHTML = `${ppm} <small>PPM</small>`;
         const status = data.mq135Status || (ppm > 200 ? "HAZARD_ALERT" : ppm > 100 ? "WARNING" : "OPTIMAL");
-        if (dashGasSub) {
-          dashGasSub.textContent = `Status: ${status}`;
-        }
-        if (status === "HAZARD_ALERT") {
+        const gasCard = dashGas.closest(".metric-card");
+
+        if (status === "HAZARD_ALERT" || ppm > 200) {
+          isCritical = true;
           dashGas.className = "m-val hl-red";
-        } else if (status === "WARNING") {
+          if (dashGasSub) dashGasSub.textContent = `CRITICAL: Gas/Smoke Hazard (${ppm} PPM)`;
+          if (gasCard) { gasCard.classList.add("card-alert-pulse"); gasCard.classList.remove("card-warning-pulse"); }
+        } else if (status === "WARNING" || ppm > 100) {
+          isWarning = true;
           dashGas.className = "m-val hl-gold";
+          if (dashGasSub) dashGasSub.textContent = `WARNING: Elevated Gas (${ppm} PPM)`;
+          if (gasCard) { gasCard.classList.add("card-warning-pulse"); gasCard.classList.remove("card-alert-pulse"); }
         } else {
           dashGas.className = "m-val hl-green";
+          if (dashGasSub) dashGasSub.textContent = `Status: OPTIMAL`;
+          if (gasCard) gasCard.classList.remove("card-alert-pulse", "card-warning-pulse");
         }
       }
 
-      // 6-Axis Motion & Fall/Impact Detection (MPU-6050)
+      // 6-Axis Motion & Abrupt Gyro / Fall / Impact Detection (MPU-6050)
       if (dashMotion) {
-        const mag = data.accelMagnitude !== undefined ? Number(data.accelMagnitude).toFixed(2) : "9.81";
-        dashMotion.innerHTML = `${mag} <small>m/s²</small>`;
-        const motStatus = data.motionStatus || (Number(mag) > 20.0 ? "IMPACT_ALERT" : "STABLE");
-        if (dashMotionSub) {
-          const ax = data.accelX !== undefined ? Number(data.accelX).toFixed(1) : "0.1";
-          const ay = data.accelY !== undefined ? Number(data.accelY).toFixed(1) : "0.1";
-          const az = data.accelZ !== undefined ? Number(data.accelZ).toFixed(1) : "9.8";
-          dashMotionSub.textContent = `Status: ${motStatus} · ${ax}/${ay}/${az}`;
-        }
-        if (motStatus === "IMPACT_ALERT") {
+        const ax = data.accelX !== undefined ? Number(data.accelX) : 0.08;
+        const ay = data.accelY !== undefined ? Number(data.accelY) : 0.12;
+        const az = data.accelZ !== undefined ? Number(data.accelZ) : 9.81;
+        const gx = data.gyroX !== undefined ? Number(data.gyroX) : 0.0;
+        const gy = data.gyroY !== undefined ? Number(data.gyroY) : 0.0;
+        const gz = data.gyroZ !== undefined ? Number(data.gyroZ) : 0.0;
+
+        const accelMag = data.accelMagnitude !== undefined ? Number(data.accelMagnitude) : Math.sqrt(ax * ax + ay * ay + az * az);
+        const gyroMag = Math.sqrt(gx * gx + gy * gy + gz * gz);
+        const motionCard = dashMotion.closest(".metric-card");
+
+        dashMotion.innerHTML = `${accelMag.toFixed(2)} <small>m/s²</small>`;
+
+        if (accelMag > 20.0 || gyroMag > 180.0) {
+          isCritical = true;
           dashMotion.className = "m-val hl-red";
+          if (dashMotionSub) dashMotionSub.textContent = `CRITICAL: Sudden Impact / Jerk (${accelMag.toFixed(1)} m/s² · ${gyroMag.toFixed(0)}°/s)`;
+          if (motionCard) { motionCard.classList.add("card-alert-pulse"); motionCard.classList.remove("card-warning-pulse"); }
+        } else if (accelMag > 14.0 || gyroMag > 90.0) {
+          isWarning = true;
+          dashMotion.className = "m-val hl-gold";
+          if (dashMotionSub) dashMotionSub.textContent = `WARNING: Abrupt Gyro Rotation (${gyroMag.toFixed(0)}°/s)`;
+          if (motionCard) { motionCard.classList.add("card-warning-pulse"); motionCard.classList.remove("card-alert-pulse"); }
         } else {
           dashMotion.className = "m-val";
+          if (dashMotionSub) dashMotionSub.textContent = `Status: STABLE · ${ax.toFixed(1)}/${ay.toFixed(1)}/${az.toFixed(1)}`;
+          if (motionCard) motionCard.classList.remove("card-alert-pulse", "card-warning-pulse");
         }
       }
 
@@ -967,6 +1040,27 @@
           if (dashGpsSub) {
             dashGpsSub.textContent = `Alt: 216m · 8 Sats · FIX ACQUIRED`;
           }
+        }
+      }
+
+      // Overall Protection Card State
+      if (dashProtected) {
+        const protCard = dashProtected.closest(".metric-card");
+        if (isCritical) {
+          dashProtected.textContent = "CRITICAL HAZARD";
+          dashProtected.className = "m-val hl-red";
+          if (dashProtectedSub) dashProtectedSub.textContent = "Anomaly Detected · Real-Time Alert";
+          if (protCard) { protCard.classList.add("card-alert-pulse"); protCard.classList.remove("card-warning-pulse"); }
+        } else if (isWarning) {
+          dashProtected.textContent = "CAUTION WARNING";
+          dashProtected.className = "m-val hl-gold";
+          if (dashProtectedSub) dashProtectedSub.textContent = "Elevated Stress / Kinetic Spike";
+          if (protCard) { protCard.classList.add("card-warning-pulse"); protCard.classList.remove("card-alert-pulse"); }
+        } else {
+          dashProtected.textContent = "PROTECTED";
+          dashProtected.className = "m-val hl-green";
+          if (dashProtectedSub) dashProtectedSub.textContent = "Edge TinyML Loop <20ms";
+          if (protCard) protCard.classList.remove("card-alert-pulse", "card-warning-pulse");
         }
       }
 

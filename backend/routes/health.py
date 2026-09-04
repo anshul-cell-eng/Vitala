@@ -7,6 +7,19 @@ except ImportError:
 
 router = APIRouter(tags=["Health & Status"])
 
+@router.get("/")
+async def root_status():
+    return {
+        "status": "online",
+        "service": settings.PROJECT_NAME,
+        "version": settings.VERSION,
+        "docs": "/docs",
+        "health": "/health",
+        "status_endpoint": "/api/status",
+        "active_nodes_endpoint": "/api/nodes",
+        "dashboard_websocket": "/ws/dashboard"
+    }
+
 @router.get("/health")
 async def health_check():
     return {

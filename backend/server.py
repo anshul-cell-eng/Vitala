@@ -275,6 +275,18 @@ async def get_active_nodes():
     """Returns the current state of all active nodes for initial dashboard load."""
     return {"active_nodes": manager.node_states}
 
+@app.get("/")
+async def root():
+    return {
+        "status": "online",
+        "service": "VITALA Tactical Telemetry API",
+        "version": "2.4.0",
+        "docs": "/docs",
+        "health": "/health",
+        "nodes": "/api/nodes",
+        "websocket": "/ws/dashboard"
+    }
+
 @app.get("/health")
 async def health():
     return {"status": "healthy", "service": "VITALA Telemetry Backend"}

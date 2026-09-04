@@ -976,28 +976,75 @@
         dashNodeBadge.textContent = isHardwareLive ? `${nodeId} · LIVE TELEMETRY` : `${nodeId} · DEMO SIMULATION`;
         dashNodeBadge.classList.toggle("offline", !isHardwareLive);
       }
-      if (dashStreamBadge) {
-        dashStreamBadge.textContent = isHardwareLive ? "● HARDWARE LIVE" : "● DEMO STREAM";
-        dashStreamBadge.style.borderColor = isHardwareLive ? "rgba(0, 255, 136, 0.4)" : "rgba(245, 158, 11, 0.4)";
-        dashStreamBadge.style.color = isHardwareLive ? "var(--green)" : "var(--gold)";
-      }
-      if (dashStatusText) {
-        dashStatusText.textContent = isHardwareLive ? "STATE: HARDWARE SENSORS BROADCASTING" : "STATE: ON-DEVICE INFERENCE ACTIVE";
+    }
+
+    function setDashboardConnectionState(state) {
+      if (state === "LIVE") {
+        isHardwareLive = true;
+        if (dashLiveDot) {
+          dashLiveDot.style.background = "var(--green)";
+          dashLiveDot.style.boxShadow = "0 0 10px var(--green)";
+        }
+        if (dashNodeBadge) dashNodeBadge.classList.remove("offline");
+        if (dashStreamBadge) {
+          dashStreamBadge.textContent = "● HARDWARE LIVE";
+          dashStreamBadge.style.borderColor = "rgba(0, 255, 136, 0.4)";
+          dashStreamBadge.style.color = "var(--green)";
+          dashStreamBadge.style.background = "rgba(0, 255, 136, 0.1)";
+        }
+        if (dashStatusText) dashStatusText.textContent = "STATE: HARDWARE SENSORS BROADCASTING";
+      } else if (state === "CONNECTING") {
+        if (dashLiveDot) {
+          dashLiveDot.style.background = "var(--gold)";
+          dashLiveDot.style.boxShadow = "0 0 10px var(--gold)";
+        }
+        if (dashStreamBadge) {
+          dashStreamBadge.textContent = "● CONNECTING...";
+          dashStreamBadge.style.borderColor = "rgba(245, 158, 11, 0.4)";
+          dashStreamBadge.style.color = "var(--gold)";
+          dashStreamBadge.style.background = "rgba(245, 158, 11, 0.1)";
+        }
+        if (dashStatusText) dashStatusText.textContent = "STATE: CONNECTING TO TELEMETRY STREAM";
+      } else if (state === "OFFLINE") {
+        isHardwareLive = false;
+        if (dashLiveDot) {
+          dashLiveDot.style.background = "var(--red)";
+          dashLiveDot.style.boxShadow = "0 0 10px var(--red)";
+        }
+        if (dashNodeBadge) {
+          dashNodeBadge.textContent = "ESP32-NODE-04 · OFFLINE";
+          dashNodeBadge.classList.add("offline");
+        }
+        if (dashStreamBadge) {
+          dashStreamBadge.textContent = "● OFFLINE (RECONNECTING)";
+          dashStreamBadge.style.borderColor = "rgba(255, 42, 95, 0.4)";
+          dashStreamBadge.style.color = "var(--red)";
+          dashStreamBadge.style.background = "rgba(255, 42, 95, 0.1)";
+        }
+        if (dashStatusText) dashStatusText.textContent = "STATE: RECONNECTING TO BACKEND";
       }
     }
 
-    // Initial Hydration from REST (/api/nodes)
+    // Initial Hydration from REST (/api/status & /api/nodes)
     async function hydrateInitialNodeState() {
       try {
-        const resp = await fetch(`${getApiBaseUrl()}/api/nodes`, { cache: "no-store" });
-        if (resp.ok) {
-          const json = await resp.json();
-          if (json.active_nodes && json.active_nodes["ESP32-NODE-04"]) {
-            applyTelemetryToUI(json.active_nodes["ESP32-NODE-04"]);
+        const apiBase = getApiBaseUrl();
+        const [statusResp, nodesResp] = await Promise.all([
+          fetch(`${apiBase}/api/status`, { cache: "no-store" }).catch(() => null),
+          fetch(`${apiBase}/api/nodes`, { cache: "no-store" }).catch(() => null)
+        ]);
+
+        if (nodesResp && nodesResp.ok) {
+          const json = await nodesResp.json();
+          if (json.active_nodes) {
+            const firstNode = Object.values(json.active_nodes)[0] || json.active_nodes["ESP32-NODE-04"];
+            if (firstNode) {
+              applyTelemetryToUI(firstNode);
+            }
           }
         }
       } catch (e) {
-        // Silent fallback to simulation
+        // Fallback
       }
     }
     hydrateInitialNodeState();
@@ -1005,18 +1052,14 @@
     // Connect to WebSocket with exponential backoff & auto-reconnect
     function connectTelemetryWebSocket() {
       const wsUrl = getBackendWsUrl();
+      setDashboardConnectionState("CONNECTING");
+
       try {
         ws = new WebSocket(wsUrl);
 
         ws.onopen = () => {
-          isHardwareLive = true;
           wsBackoffMs = 1500;
-          if (dashLiveDot) dashLiveDot.style.background = "var(--green)";
-          if (dashNodeBadge) dashNodeBadge.classList.remove("offline");
-          if (dashStreamBadge) {
-            dashStreamBadge.textContent = "● HARDWARE LIVE";
-            dashStreamBadge.style.color = "var(--green)";
-          }
+          setDashboardConnectionState("LIVE");
         };
 
         ws.onmessage = (event) => {
@@ -1029,25 +1072,17 @@
         };
 
         ws.onerror = () => {
-          isHardwareLive = false;
+          setDashboardConnectionState("OFFLINE");
         };
 
         ws.onclose = () => {
-          isHardwareLive = false;
-          if (dashNodeBadge) {
-            dashNodeBadge.textContent = "ESP32-NODE-04 · AUTONOMOUS SIM";
-            dashNodeBadge.classList.add("offline");
-          }
-          if (dashStreamBadge) {
-            dashStreamBadge.textContent = "● DEMO SIMULATION";
-            dashStreamBadge.style.color = "var(--gold)";
-          }
+          setDashboardConnectionState("OFFLINE");
           clearTimeout(wsReconnectTimer);
           wsReconnectTimer = setTimeout(connectTelemetryWebSocket, wsBackoffMs);
           wsBackoffMs = Math.min(wsBackoffMs * 1.5, 8000);
         };
       } catch (e) {
-        isHardwareLive = false;
+        setDashboardConnectionState("OFFLINE");
         clearTimeout(wsReconnectTimer);
         wsReconnectTimer = setTimeout(connectTelemetryWebSocket, 5000);
       }

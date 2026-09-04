@@ -1,3 +1,4 @@
+import time
 import json
 import asyncio
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
@@ -102,7 +103,7 @@ async def esp32_endpoint(websocket: WebSocket, node_id: str):
                 "mq135Status": status_for_aqi(aqi),
                 "hsiScore": hsi_score,
                 "connectionStatus": "LIVE_HARDWARE",
-                "timestamp": asyncio.get_event_loop().time()
+                "timestamp": time.time()
             }
 
             manager.node_states[node_id] = enriched_data

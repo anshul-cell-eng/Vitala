@@ -1,3 +1,4 @@
+import time
 import asyncio
 from typing import Dict, Set
 from fastapi import WebSocket, WebSocketDisconnect
@@ -32,7 +33,7 @@ def default_node_state(node_id: str) -> dict:
         "satellites": 8,
         "gpsFixValid": True,
         "connectionStatus": "LIVE_HARDWARE",
-        "timestamp": asyncio.get_event_loop().time(),
+        "timestamp": time.time(),
     }
 
 class ConnectionManager:
@@ -76,7 +77,7 @@ class ConnectionManager:
         state["hsiScore"] = calculate_hsi(
             state["ambientTemp"], state["humidity"], state["heartRate"]
         )
-        state["timestamp"] = asyncio.get_event_loop().time()
+        state["timestamp"] = time.time()
 
         self.node_states[node_id] = state
         await self.broadcast_telemetry(state)

@@ -1,9 +1,11 @@
-import json
+import time
 import asyncio
-from typing import Dict, Set
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+import json
+import math
+from typing import Dict, Set, Optional
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 app = FastAPI(title="VITALA Tactical Telemetry API - SIH26181")
 
@@ -105,7 +107,7 @@ def default_node_state(node_id: str) -> dict:
         "satellites": 8,
         "gpsFixValid": True,
         "connectionStatus": "LIVE_HARDWARE",
-        "timestamp": asyncio.get_event_loop().time(),
+        "timestamp": time.time(),
     }
 
 # --- 3. Connection Manager ---
@@ -157,7 +159,7 @@ class ConnectionManager:
         state["hsiScore"] = calculate_hsi(
             state["ambientTemp"], state["humidity"], state["heartRate"]
         )
-        state["timestamp"] = asyncio.get_event_loop().time()
+        state["timestamp"] = time.time()
 
         self.node_states[node_id] = state
         await self.broadcast_telemetry(state)
@@ -211,7 +213,7 @@ async def esp32_endpoint(websocket: WebSocket, node_id: str):
                 "mq135Status": mq135_status,
                 "hsiScore": hsi_score,
                 "connectionStatus": "LIVE_HARDWARE",
-                "timestamp": asyncio.get_event_loop().time()
+                "timestamp": time.time()
             }
 
             manager.node_states[node_id] = enriched_data

@@ -17,6 +17,10 @@ async def root_status():
         "health": "/health",
         "status_endpoint": "/api/status",
         "active_nodes_endpoint": "/api/nodes",
+        "doctor_notes_endpoint": "/api/v1/doctor/notes",
+        "doctor_note_post_endpoint": "/api/v1/doctor/note",
+        "telemetry_history_endpoint": "/api/v1/telemetry/history",
+        "alerts_history_endpoint": "/api/v1/alerts/history",
         "dashboard_websocket": "/ws/dashboard"
     }
 

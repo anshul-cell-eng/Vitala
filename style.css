@@ -1693,6 +1693,389 @@ body {
   animation: greenBreathe 2.5s ease-in-out infinite alternate;
 }
 
+/* Wearer Wrist Sync Banner */
+.dash-wearer-banner {
+  margin-top: 18px;
+  padding: 12px 18px;
+  background: rgba(0, 229, 255, 0.05);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  transition: all 0.3s ease;
+}
+
+.wearer-banner-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--cyan);
+  letter-spacing: 0.05em;
+  background: rgba(0, 229, 255, 0.12);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 229, 255, 0.3);
+}
+
+.wearer-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  animation: pulseDot 1.5s infinite alternate;
+}
+
+.wearer-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+
+.wearer-doc-tag {
+  color: var(--gold);
+  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.wearer-rec-text {
+  color: #fff;
+  font-style: italic;
+}
+
+.wearer-time-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  margin-left: auto;
+}
+
+/* Doctor Clinical Portal Grid */
+.dash-doctor-portal {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.doctor-portal-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 16px;
+}
+
+@media (max-width: 1024px) {
+  .doctor-portal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.portal-card {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-glass);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.portal-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.portal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+.p-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.p-dot.gold { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
+.p-dot.green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+
+.portal-filters {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-filter {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-filter.active, .btn-filter:hover {
+  background: rgba(0, 255, 136, 0.15);
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.btn-refresh-hist {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-dim);
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-refresh-hist:hover { color: #fff; border-color: #fff; }
+
+.live-dispatch-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--green);
+  background: rgba(0, 255, 136, 0.08);
+  border: 1px solid rgba(0, 255, 136, 0.25);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* History Stats Bar */
+.hist-stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.h-stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.h-stat-label {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+
+.h-stat-val {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: #fff;
+}
+
+/* Historical Table */
+.hist-table-container {
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+}
+
+.hist-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-align: left;
+}
+
+.hist-table th {
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--text-dim);
+  padding: 6px 8px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.hist-table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+}
+
+.hist-table tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+}
+
+.badge-opt { color: var(--green); font-size: 9px; font-weight: 700; }
+.badge-warn { color: var(--gold); font-size: 9px; font-weight: 700; }
+.badge-crit { color: var(--red); font-size: 9px; font-weight: 700; }
+
+/* Doctor Form */
+.doctor-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-row-duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 5px;
+  padding: 6px 10px;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group select option {
+  background: #111;
+  color: #fff;
+}
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: var(--green);
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.btn-submit-doctor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--green);
+  color: #03070d;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 7px 14px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: all 0.2s;
+}
+
+.btn-submit-doctor:hover {
+  background: #00ffaa;
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.4);
+  transform: translateY(-1px);
+}
+
+.form-status-msg {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--green);
+}
+
+/* Past Notes List */
+.past-notes-container {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.past-notes-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.past-notes-list {
+  max-height: 90px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.note-item {
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2px solid var(--green);
+  border-radius: 0 4px 4px 0;
+  font-size: 10.5px;
+}
+
+.note-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.note-head b { color: #fff; font-size: 10.5px; }
+
+.note-badge {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+.note-badge.info { background: rgba(0, 229, 255, 0.15); color: var(--cyan); }
+.note-badge.caution { background: rgba(245, 158, 11, 0.15); color: var(--gold); }
+.note-badge.urgent { background: rgba(255, 42, 95, 0.2); color: var(--red); }
+
+.note-time {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  color: var(--text-dim);
+  margin-left: auto;
+}
+
+.note-body {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
 /* ==========================================
    SECTION 06: CINEMATIC DISASTER RESPONSE HUD
    ========================================== */

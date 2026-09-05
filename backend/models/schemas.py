@@ -128,3 +128,30 @@ class NodeState(BaseModel):
     gpsFixValid: bool
     connectionStatus: str
     timestamp: float
+
+# --- Doctor Clinical Notes & Wearer Write-Back Schemas ---
+
+class DoctorNotePayload(BaseModel):
+    node_id: str = Field("ESP32-NODE-04", description="Target hardware node identifier")
+    doctor_id: str = Field(..., description="Doctor or clinician identifier")
+    doctor_name: Optional[str] = Field("Dr. Sharma", description="Attending clinician name")
+    note: str = Field(..., description="Clinical observation and diagnosis notes")
+    recommendation: str = Field(..., description="Actionable prescription / advice for wearer")
+    severity: Optional[str] = Field("INFO", description="Severity level: INFO, CAUTION, URGENT, EMERGENCY")
+
+    @model_validator(mode='before')
+    @classmethod
+    def normalize_keys(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if 'nodeId' in data and 'node_id' not in data: data['node_id'] = data['nodeId']
+            if 'doctorId' in data and 'doctor_id' not in data: data['doctor_id'] = data['doctorId']
+            if 'doctorName' in data and 'doctor_name' not in data: data['doctor_name'] = data['doctorName']
+            if 'advice' in data and 'recommendation' not in data: data['recommendation'] = data['advice']
+        return data
+
+class DoctorNoteResponse(BaseModel):
+    status: str
+    note_id: int
+    data: Dict[str, Any]
+    broadcast_dispatched: bool
+

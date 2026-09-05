@@ -1159,7 +1159,22 @@
         ws.onmessage = (event) => {
           try {
             const payload = JSON.parse(event.data);
-            applyTelemetryToUI(payload);
+            if (payload.type === "doctor_note") {
+              renderWearerDoctorBanner(payload);
+              prependDoctorNoteToList(payload);
+            } else if (payload.type === "emergency_alert") {
+              // Highlight emergency alert event
+              if (dashProtected) {
+                dashProtected.textContent = "CRITICAL HAZARD";
+                dashProtected.className = "m-val hl-red";
+                if (dashProtectedSub) dashProtectedSub.textContent = `🚨 ${payload.alert.message}`;
+              }
+            } else {
+              applyTelemetryToUI(payload);
+              if (payload.latestDoctorNote) {
+                renderWearerDoctorBanner(payload.latestDoctorNote);
+              }
+            }
           } catch (err) {
             // Ignore malformed packet
           }
@@ -1182,6 +1197,222 @@
       }
     }
 
+    // --- Doctor Clinical Portal & History Controllers ---
+    const dashBannerDoc = document.getElementById("dashBannerDoc");
+    const dashBannerRec = document.getElementById("dashBannerRec");
+    const dashBannerTime = document.getElementById("dashBannerTime");
+    const dashHistoryTableBody = document.getElementById("dashHistoryTableBody");
+    const histAvgHr = document.getElementById("histAvgHr");
+    const histHrRange = document.getElementById("histHrRange");
+    const histMinSpo2 = document.getElementById("histMinSpo2");
+    const histPeakHsi = document.getElementById("histPeakHsi");
+    const dashPastNotesList = document.getElementById("dashPastNotesList");
+    const btnSubmitDoctorNote = document.getElementById("btnSubmitDoctorNote");
+    const lblDoctorNoteStatus = document.getElementById("lblDoctorNoteStatus");
+    const btnHist24h = document.getElementById("btnHist24h");
+    const btnHist7d = document.getElementById("btnHist7d");
+    const btnRefreshHist = document.getElementById("btnRefreshHist");
+
+    let currentHistHours = 24.0;
+
+    function renderWearerDoctorBanner(note) {
+      if (!note) return;
+      if (dashBannerDoc) dashBannerDoc.textContent = `${note.doctorName || note.doctor_name || "Attending Physician"}:`;
+      if (dashBannerRec) dashBannerRec.textContent = `"${note.recommendation || note.advice || "Continue standard mission monitoring."}"`;
+      if (dashBannerTime) {
+        const d = note.timestamp ? new Date(note.timestamp * 1000) : new Date();
+        dashBannerTime.textContent = `Synced: ${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      }
+    }
+
+    function prependDoctorNoteToList(note) {
+      if (!dashPastNotesList || !note) return;
+      const d = note.timestamp ? new Date(note.timestamp * 1000) : new Date();
+      const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const sev = (note.severity || "INFO").toLowerCase();
+      const item = document.createElement("div");
+      item.className = "note-item";
+      item.innerHTML = `
+        <div class="note-head">
+          <b>${note.doctorName || note.doctor_name || "Dr. Sharma"}</b>
+          <span class="note-badge ${sev}">${note.severity || "INFO"}</span>
+          <span class="note-time">${timeStr}</span>
+        </div>
+        <p class="note-body">${note.recommendation || note.note || ""}</p>
+      `;
+      dashPastNotesList.insertBefore(item, dashPastNotesList.firstChild);
+    }
+
+    async function fetchTelemetryHistory(hours = 24.0) {
+      try {
+        const apiBase = getApiBaseUrl();
+        const resp = await fetch(`${apiBase}/api/v1/telemetry/history?node_id=ESP32-NODE-04&limit=30&hours=${hours}`, { cache: "no-store" });
+        if (!resp.ok) return;
+        const data = await resp.json();
+        
+        // Update Aggregated Stats
+        if (data.stats) {
+          if (histAvgHr) histAvgHr.innerHTML = `${data.stats.avgHeartRate || 76} <small>BPM</small>`;
+          if (histHrRange) histHrRange.textContent = `${data.stats.minHeartRate || 68} - ${data.stats.maxHeartRate || 118}`;
+          if (histMinSpo2) histMinSpo2.textContent = `${data.stats.minSpO2 || 96}%`;
+          if (histPeakHsi) histPeakHsi.textContent = `${data.stats.peakHsi || 34.5}`;
+        }
+
+        // Render Table Rows
+        if (dashHistoryTableBody && Array.isArray(data.history)) {
+          if (data.history.length === 0) {
+            dashHistoryTableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-dim);">No historical telemetry recorded for selected window</td></tr>`;
+            return;
+          }
+
+          dashHistoryTableBody.innerHTML = data.history.map(row => {
+            const d = new Date((row.timestamp || Date.now() / 1000) * 1000);
+            const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const hr = row.heartRate ? `${Math.round(row.heartRate)} BPM` : "--";
+            const spo2 = row.spO2 ? `${Math.round(row.spO2)}%` : "--";
+            const hsi = row.hsiScore ? Number(row.hsiScore).toFixed(1) : "--";
+            const gas = row.aqiPpm ? `${Math.round(row.aqiPpm)} PPM` : "--";
+            const mot = row.accelMagnitude ? `${Number(row.accelMagnitude).toFixed(1)} m/s²` : "9.8 m/s²";
+            
+            let statusBadge = `<span class="badge-opt">OPTIMAL</span>`;
+            if (row.motionStatus === "IMPACT_ALERT" || (row.heartRate && row.heartRate > 120)) {
+              statusBadge = `<span class="badge-crit">CRITICAL</span>`;
+            } else if (row.mq135Status === "WARNING" || (row.heartRate && row.heartRate > 100)) {
+              statusBadge = `<span class="badge-warn">WARNING</span>`;
+            }
+
+            return `
+              <tr>
+                <td>${timeStr}</td>
+                <td>${hr}</td>
+                <td>${spo2}</td>
+                <td>${hsi}</td>
+                <td>${gas}</td>
+                <td>${mot}</td>
+                <td>${statusBadge}</td>
+              </tr>
+            `;
+          }).join("");
+        }
+      } catch (e) {
+        console.warn("Failed to fetch telemetry history:", e);
+      }
+    }
+
+    async function fetchDoctorNotes() {
+      try {
+        const apiBase = getApiBaseUrl();
+        const resp = await fetch(`${apiBase}/api/v1/doctor/notes?node_id=ESP32-NODE-04&limit=10`, { cache: "no-store" });
+        if (!resp.ok) return;
+        const data = await resp.json();
+        if (data.notes && Array.isArray(data.notes) && data.notes.length > 0) {
+          if (dashPastNotesList) {
+            dashPastNotesList.innerHTML = "";
+            data.notes.forEach(note => prependDoctorNoteToList(note));
+          }
+          renderWearerDoctorBanner(data.notes[0]);
+        }
+      } catch (e) {
+        console.warn("Failed to fetch doctor notes:", e);
+      }
+    }
+
+    async function handleDoctorNoteSubmit() {
+      const txtDoctorName = document.getElementById("txtDoctorName");
+      const selSeverity = document.getElementById("selSeverity");
+      const txtDoctorNote = document.getElementById("txtDoctorNote");
+      const txtDoctorRec = document.getElementById("txtDoctorRec");
+
+      const docName = txtDoctorName ? txtDoctorName.value.trim() : "Dr. Sharma";
+      const severity = selSeverity ? selSeverity.value : "INFO";
+      const noteText = txtDoctorNote ? txtDoctorNote.value.trim() : "Routine checkup";
+      const recText = txtDoctorRec ? txtDoctorRec.value.trim() : "Maintain hydration";
+
+      if (!recText) {
+        if (lblDoctorNoteStatus) lblDoctorNoteStatus.textContent = "Please enter wearer advice.";
+        return;
+      }
+
+      if (btnSubmitDoctorNote) {
+        btnSubmitDoctorNote.disabled = true;
+        btnSubmitDoctorNote.style.opacity = "0.7";
+      }
+      if (lblDoctorNoteStatus) {
+        lblDoctorNoteStatus.textContent = "Transmitting to wearer...";
+        lblDoctorNoteStatus.style.color = "var(--gold)";
+      }
+
+      try {
+        const apiBase = getApiBaseUrl();
+        const resp = await fetch(`${apiBase}/api/v1/doctor/note`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            node_id: "ESP32-NODE-04",
+            doctor_id: "DOC-VITALA-01",
+            doctor_name: docName,
+            note: noteText || "Wearer telemetry prescription",
+            recommendation: recText,
+            severity: severity
+          })
+        });
+
+        if (resp.ok) {
+          const json = await resp.json();
+          if (lblDoctorNoteStatus) {
+            lblDoctorNoteStatus.textContent = "✓ Transmitted to Wrist Unit via RFC 6455";
+            lblDoctorNoteStatus.style.color = "var(--green)";
+          }
+          renderWearerDoctorBanner(json.data);
+          prependDoctorNoteToList(json.data);
+          if (txtDoctorNote) txtDoctorNote.value = "";
+          setTimeout(() => { if (lblDoctorNoteStatus) lblDoctorNoteStatus.textContent = ""; }, 4000);
+        } else {
+          if (lblDoctorNoteStatus) {
+            lblDoctorNoteStatus.textContent = "Server response error";
+            lblDoctorNoteStatus.style.color = "var(--red)";
+          }
+        }
+      } catch (err) {
+        if (lblDoctorNoteStatus) {
+          lblDoctorNoteStatus.textContent = "Network error";
+          lblDoctorNoteStatus.style.color = "var(--red)";
+        }
+      } finally {
+        if (btnSubmitDoctorNote) {
+          btnSubmitDoctorNote.disabled = false;
+          btnSubmitDoctorNote.style.opacity = "1";
+        }
+      }
+    }
+
+    if (btnSubmitDoctorNote) {
+      btnSubmitDoctorNote.addEventListener("click", handleDoctorNoteSubmit);
+    }
+    if (btnHist24h) {
+      btnHist24h.addEventListener("click", () => {
+        currentHistHours = 24.0;
+        btnHist24h.classList.add("active");
+        if (btnHist7d) btnHist7d.classList.remove("active");
+        fetchTelemetryHistory(24.0);
+      });
+    }
+    if (btnHist7d) {
+      btnHist7d.addEventListener("click", () => {
+        currentHistHours = 168.0;
+        btnHist7d.classList.add("active");
+        if (btnHist24h) btnHist24h.classList.remove("active");
+        fetchTelemetryHistory(168.0);
+      });
+    }
+    if (btnRefreshHist) {
+      btnRefreshHist.addEventListener("click", () => fetchTelemetryHistory(currentHistHours));
+    }
+
+    // Initial load of history & notes
+    fetchTelemetryHistory(24.0);
+    fetchDoctorNotes();
+
     connectTelemetryWebSocket();
 
     // Expose programmatic helper API for developer testing & verification
@@ -1198,6 +1429,18 @@
       },
       getNodes: async () => {
         const r = await fetch(`${getApiBaseUrl()}/api/nodes`);
+        return await r.json();
+      },
+      postDoctorNote: async (noteData = {}) => {
+        const r = await fetch(`${getApiBaseUrl()}/api/v1/doctor/note`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(noteData)
+        });
+        return await r.json();
+      },
+      getHistory: async (hours = 24) => {
+        const r = await fetch(`${getApiBaseUrl()}/api/v1/telemetry/history?node_id=ESP32-NODE-04&hours=${hours}`);
         return await r.json();
       },
       predictRisk: async (params = {}) => {

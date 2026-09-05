@@ -12,10 +12,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 try:
     from .config import settings
-    from .routes import health, telemetry, predict
+    from .routes import health, telemetry, predict, doctor
 except ImportError:
     from config import settings
-    from routes import health, telemetry, predict
+    from routes import health, telemetry, predict, doctor
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -39,6 +39,7 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(telemetry.router)
 app.include_router(predict.router)
+app.include_router(doctor.router)
 
 if __name__ == "__main__":
     import uvicorn

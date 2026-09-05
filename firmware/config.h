@@ -8,11 +8,12 @@
 
 // ---- Backend server (FastAPI) ----
 // Update this to your backend's actual LAN IP/port.
-#define SERVER_BASE_URL    "http://192.168.1.100:8000"
+#define SERVER_BASE_URL    "https://vitala-api.onrender.com"
 #define HAZARD_ENDPOINT    SERVER_BASE_URL "/api/v1/telemetry/hazard"
 #define VITALS_ENDPOINT    SERVER_BASE_URL "/api/v1/telemetry/vitals"
 #define MOTION_ENDPOINT    SERVER_BASE_URL "/api/v1/telemetry/motion"
 #define LOCATION_ENDPOINT  SERVER_BASE_URL "/api/v1/telemetry/location"
+#define DOCTOR_NOTE_ENDPOINT SERVER_BASE_URL "/api/v1/doctor/notes/" NODE_ID "/latest"
 
 // ---- Node identity ----
 // Sent in every POST so the backend can key state per hardware node.

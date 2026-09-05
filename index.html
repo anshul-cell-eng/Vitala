@@ -608,6 +608,152 @@
               <span class="m-sub" id="dashProtectedSub">Edge TinyML Loop &lt;20ms</span>
             </div>
           </div>
+
+          <!-- Live Wearer Wrist Prescription Write-Back Banner -->
+          <div class="dash-wearer-banner" id="dashWearerBanner">
+            <div class="wearer-banner-badge">
+              <span class="wearer-pulse-dot"></span>
+              <b>WRIST WRITE-BACK SYNC</b>
+            </div>
+            <div class="wearer-banner-content">
+              <span class="wearer-doc-tag" id="dashBannerDoc">Dr. Sharma (Cardiology):</span>
+              <span class="wearer-rec-text" id="dashBannerRec">"Hydrate with 500ml oral fluids; cease high exertion in ambient heat."</span>
+              <span class="wearer-time-tag" id="dashBannerTime">Synced via RFC 6455</span>
+            </div>
+          </div>
+
+          <!-- Doctor Clinical Portal & Historical Audit Grid -->
+          <div class="dash-doctor-portal">
+            <div class="doctor-portal-grid">
+              
+              <!-- Left Column: Patient Telemetry History Log (Past 24h) -->
+              <div class="portal-card history-card">
+                <div class="portal-card-header">
+                  <div class="portal-title">
+                    <span class="p-dot gold"></span>
+                    <b>PATIENT TELEMETRY AUDIT &amp; HISTORY</b>
+                  </div>
+                  <div class="portal-filters">
+                    <button class="btn-filter active" id="btnHist24h" type="button">24H</button>
+                    <button class="btn-filter" id="btnHist7d" type="button">7D</button>
+                    <button class="btn-refresh-hist" id="btnRefreshHist" type="button" title="Refresh Audit Log">↻</button>
+                  </div>
+                </div>
+
+                <!-- Aggregated Patient Stats -->
+                <div class="hist-stats-bar" id="dashHistoryStats">
+                  <div class="h-stat-item">
+                    <span class="h-stat-label">AVG HR</span>
+                    <b class="h-stat-val" id="histAvgHr">76 <small>BPM</small></b>
+                  </div>
+                  <div class="h-stat-item">
+                    <span class="h-stat-label">HR RANGE</span>
+                    <b class="h-stat-val" id="histHrRange">68 - 118</b>
+                  </div>
+                  <div class="h-stat-item">
+                    <span class="h-stat-label">MIN SpO₂</span>
+                    <b class="h-stat-val hl-cyan" id="histMinSpo2">96%</b>
+                  </div>
+                  <div class="h-stat-item">
+                    <span class="h-stat-label">PEAK HSI</span>
+                    <b class="h-stat-val hl-gold" id="histPeakHsi">34.5</b>
+                  </div>
+                </div>
+
+                <!-- Scrollable Historical Telemetry Timeline Table -->
+                <div class="hist-table-container">
+                  <table class="hist-table">
+                    <thead>
+                      <tr>
+                        <th>TIME</th>
+                        <th>HR</th>
+                        <th>SpO₂</th>
+                        <th>HSI</th>
+                        <th>GAS</th>
+                        <th>MOTION</th>
+                        <th>STATUS</th>
+                      </tr>
+                    </thead>
+                    <tbody id="dashHistoryTableBody">
+                      <tr>
+                        <td>Just now</td>
+                        <td>78 BPM</td>
+                        <td>99%</td>
+                        <td>31.2</td>
+                        <td>42 PPM</td>
+                        <td>9.8 m/s²</td>
+                        <td><span class="badge-opt">OPTIMAL</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Right Column: Doctor Review & Telemetry Write-Back Form -->
+              <div class="portal-card writeback-card">
+                <div class="portal-card-header">
+                  <div class="portal-title">
+                    <span class="p-dot green"></span>
+                    <b>CLINICAL PRESCRIPTION &amp; WRITE-BACK</b>
+                  </div>
+                  <span class="live-dispatch-badge">● PROACTIVE DISPATCH ON</span>
+                </div>
+
+                <form class="doctor-form" id="formDoctorNote" onsubmit="return false;">
+                  <div class="form-row-duo">
+                    <div class="form-group">
+                      <label for="txtDoctorName">PHYSICIAN NAME</label>
+                      <input type="text" id="txtDoctorName" value="Dr. Sharma" placeholder="e.g. Dr. A. Sharma, MD" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="selSeverity">ALERT SEVERITY</label>
+                      <select id="selSeverity">
+                        <option value="INFO">INFO · Routine Care</option>
+                        <option value="CAUTION">CAUTION · Preventative</option>
+                        <option value="URGENT">URGENT · Tactical Action</option>
+                        <option value="EMERGENCY">EMERGENCY · Immediate Triage</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="txtDoctorNote">CLINICAL OBSERVATIONS / DIAGNOSIS</label>
+                    <textarea id="txtDoctorNote" rows="2" placeholder="e.g., Sinus tachycardia noted during high ambient heat index (38 HSI). Risk of heat stroke."></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="txtDoctorRec">WEARER PRESCRIPTION &amp; ADVICE (PUSH TO WRIST OLED)</label>
+                    <input type="text" id="txtDoctorRec" value="Increase fluid intake &amp; seek shade immediately" placeholder="e.g., Increase fluid intake, rest for 15 minutes in cool shelter" required />
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="button" class="btn-submit-doctor" id="btnSubmitDoctorNote">
+                      <span>TRANSMIT TO WEARER DEVICE</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                    <span class="form-status-msg" id="lblDoctorNoteStatus"></span>
+                  </div>
+                </form>
+
+                <!-- Past Doctor Notes for this Patient -->
+                <div class="past-notes-container">
+                  <div class="past-notes-title">CLINICAL NOTES RECORDED</div>
+                  <div class="past-notes-list" id="dashPastNotesList">
+                    <div class="note-item">
+                      <div class="note-head">
+                        <b>Dr. Sharma</b>
+                        <span class="note-badge info">INFO</span>
+                        <span class="note-time">Initial Assessment</span>
+                      </div>
+                      <p class="note-body">Normal baseline telemetry. Continue regular mission monitoring.</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
     </section>
